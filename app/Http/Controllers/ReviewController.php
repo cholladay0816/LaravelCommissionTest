@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Commission;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -16,11 +17,12 @@ class ReviewController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return Application|Factory|View|Response
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        $reviews = Review::where('user_id', $user->id)->where('anonymous', '0')->paginate(15);
+        return view('reviews.index', ['reviews' => $reviews]);
     }
 
     /**

@@ -11,6 +11,10 @@ class Review extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'anonymous' => 'boolean'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

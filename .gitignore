@@ -16,3 +16,5 @@ yarn-error.log
 *.mp4
 auth.json
 supervisord.*
+cypress/screenshots
+cypress/videos

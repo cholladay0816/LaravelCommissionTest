@@ -39,6 +39,22 @@ class CommissionTest extends TestCase
 
         $this->assertEquals($commission->preset->id, $preset->id);
     }
+    /** @test */
+    public function a_commission_has_working_sales_tax()
+    {
+        $commission = Commission::factory()->create(['price' => 5]);
+
+        $sales_tax = config('commission.sales_tax');
+        $stripe_flat_fee = 0.3;
+
+        // Multiply the commission price by the sales tax
+        $expected_fee = $commission->price * (1 + $sales_tax);
+        // Add the flat fee
+        $expected_fee += $stripe_flat_fee;
+        echo('Expecting a fee of $' . number_format($expected_fee, 2));
+
+        $this->assertEquals($expected_fee, $commission->total());
+    }
 
     /** @test */
     public function a_commission_can_have_a_null_preset()

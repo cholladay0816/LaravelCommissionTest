@@ -8,7 +8,7 @@
                         <h3 class="text-sm {{!$notification->read_at?'font-bold':'font-medium'}}"
                             :class="{'font-bold': !read, 'font-medium': read}"
                         >
-                            <a href="{{route('notifications.show', $notification)}}">{{$notification->title}}</a>
+                            <a href="">{{$notification->title}}</a>
                         </h3>
                         <div class="flex flex-row gap-3 my-auto">
                             <p class="text-sm text-gray-500">{{\Illuminate\Support\Carbon::parse($notification->created_at)->diffForHumans()}}</p>
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <p class="text-sm text-gray-500">
-                        <a href="{{route('notifications.show', $notification)}}">
+                        <a href="">
                             {{$notification->description}}
                         </a>
                     </p>

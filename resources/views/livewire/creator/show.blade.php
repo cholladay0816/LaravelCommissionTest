@@ -65,24 +65,21 @@
                         </div>
                         <div class="w-full lg:w-4/12 px-4 lg:order-1">
                             <div class="flex justify-center py-4 lg:pt-4 pt-8">
-                                <div class="mr-4 p-3 text-center">
-                      <span
-                          class="text-xl font-bold block uppercase tracking-wide text-gray-700"
-                      >{{$user->ratings->count()}}</span
-                      ><span class="text-sm text-gray-500">Reviews</span>
-                                </div>
-                                <div class="mr-4 p-3 text-center">
-                      <span
-                          class="text-xl font-bold block uppercase tracking-wide text-gray-700"
-                      >{{$user->gallery->count()}}</span
-                      ><span class="text-sm text-gray-500">Photos</span>
-                                </div>
-                                <div class="lg:mr-4 p-3 text-center">
-                      <span
-                          class="text-xl font-bold block uppercase tracking-wide text-gray-700"
-                      >{{$user->commissionPresets->count()}}</span
-                      ><span class="text-sm text-gray-500">Commissions</span>
-                                </div>
+                                <a class="mr-4 p-3 text-center group" href="{{route('reviews.index', $user)}}">
+                                    <span class="text-xl font-bold block uppercase tracking-wide group-hover:text-sky-500 text-gray-700"
+                                    >{{$user->ratings->count()}}</span>
+                                    <span class="text-sm group-hover:text-sky-400 text-gray-500">Reviews</span>
+                                </a>
+                                <a href="{{route('creator.show', [$user, 'gallery'])}}" class="mr-4 p-3 text-center group">
+                                    <span class="text-xl font-bold block uppercase tracking-wide group-hover:text-sky-500 text-gray-700"
+                                    >{{$user->gallery->count()}}</span>
+                                    <span class="text-sm group-hover:text-sky-400 text-gray-500">Photos</span>
+                                </a>
+                                <a href="{{route('creator.show', [$user, 'commissions'])}}" class="lg:mr-4 p-3 text-center group">
+                                    <span class="text-xl font-bold block uppercase tracking-wide group-hover:text-sky-500 text-gray-700"
+                                    >{{$user->commissionPresets->count()}}</span>
+                                    <span class="text-sm group-hover:text-sky-400 text-gray-500">Commissions</span>
+                                </a>
                             </div>
                         </div>
                     </div>

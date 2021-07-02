@@ -275,6 +275,44 @@
       "HEAD"
     ]
   },
+  "two-factor.enable": {
+    "name": "two-factor.enable",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticationController@store",
+    "uri": "user/two-factor-authentication",
+    "method": [
+      "POST"
+    ]
+  },
+  "two-factor.disable": {
+    "name": "two-factor.disable",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticationController@destroy",
+    "uri": "user/two-factor-authentication",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "two-factor.qr-code": {
+    "name": "two-factor.qr-code",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorQrCodeController@show",
+    "uri": "user/two-factor-qr-code",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "two-factor.recovery-codes": {
+    "name": "two-factor.recovery-codes",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\RecoveryCodeController@index",
+    "uri": "user/two-factor-recovery-codes",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
   "terms.show": {
     "name": "terms.show",
     "domain": null,
@@ -401,11 +439,31 @@
       "HEAD"
     ]
   },
+  "onboarding": {
+    "name": "onboarding",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\OnboardingController@index",
+    "uri": "onboarding",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
   "creator.show": {
     "name": "creator.show",
     "domain": null,
     "action": "App\\Http\\Controllers\\CreatorController@show",
     "uri": "creator/{user}/{page?}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "gallery.show": {
+    "name": "gallery.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GalleryController@show",
+    "uri": "gallery/{gallery}",
     "method": [
       "GET",
       "HEAD"
@@ -419,6 +477,73 @@
     "method": [
       "GET",
       "HEAD"
+    ]
+  },
+  "reviews.index": {
+    "name": "reviews.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReviewController@index",
+    "uri": "reviews/{user}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "reviews.show": {
+    "name": "reviews.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReviewController@show",
+    "uri": "reviews/{review}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "reviews.create": {
+    "name": "reviews.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReviewController@create",
+    "uri": "reviews/create/{commission}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "reviews.store": {
+    "name": "reviews.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ReviewController@store",
+    "uri": "reviews/create/{commission}",
+    "method": [
+      "POST"
+    ]
+  },
+  "ratings.create": {
+    "name": "ratings.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\RatingController@create",
+    "uri": "ratings/create/{review}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "ratings.store": {
+    "name": "ratings.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\RatingController@store",
+    "uri": "ratings/create/{review}",
+    "method": [
+      "POST"
+    ]
+  },
+  "gallery.store": {
+    "name": "gallery.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GalleryController@store",
+    "uri": "gallery",
+    "method": [
+      "POST"
     ]
   },
   "commissionpresets.index": {

@@ -16,7 +16,7 @@
                                 <span class="block text-sky-200">commissioning platform</span>
                             </div>
                             <p class="mt-6 max-w-lg mx-auto text-center text-xl text-sky-200 sm:max-w-3xl">
-                                CreatorCore is a commission-based service for digital artists to make money doing what they love.
+                                {{ config('app.name') }} is a commission-based service for digital artists to make money doing what they love.
                             </p>
                             <div class="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
                                 <div class="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5">
@@ -158,10 +158,10 @@
             <div class="bg-gradient-to-r from-sky-600 to-sky-800">
                 <div class="max-w-4xl mx-auto px-4 py-16 sm:px-6 sm:pt-20 sm:pb-24 lg:max-w-7xl lg:pt-24 lg:px-8">
                     <h2 class="text-3xl font-extrabold text-white tracking-tight">
-                        How CreatorCore benefits you
+                        How {{ config('app.name') }} benefits you
                     </h2>
                     <p class="mt-4 max-w-3xl text-lg text-purple-200">
-                        CreatorCore is the first truly creator-first platform, designed as a powerful tool for creators to
+                        {{ config('app.name') }} is the first truly creator-first platform, designed as a powerful tool for creators to
                         succeed.  Learn more about how we achieve this below:
                     </p>
                     <div class="mt-12 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-16">
@@ -248,7 +248,7 @@
                                 <h3 class="text-lg font-medium text-white">$0 Commission Fee</h3>
                                 <p class="mt-2 text-base text-purple-200">
                                     We promise to never take a single cent of your hard earned money.  All our expenses are paid upfront as a
-                                    6% sales fee, meaning our creators never foot the bill.
+                                    {{ number_format(config('commission.sales_tax') * 100, 0) }}% sales fee, meaning our creators never foot the bill.
                                 </p>
                             </div>
                         </div>

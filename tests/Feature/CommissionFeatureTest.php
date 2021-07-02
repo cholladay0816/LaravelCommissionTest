@@ -181,7 +181,7 @@ class CommissionFeatureTest extends TestCase
     public function a_disputed_commission_can_be_resolved()
     {
         $this->seed(RoleSeeder::class);
-        $admin = Role::where('title', 'Administrator')->firstOrCreate();
+        $admin = Role::where('title', 'Administrator')->first();
         $administrator = User::factory()->create();
         $admin->users()->attach($administrator->id);
 
@@ -193,7 +193,6 @@ class CommissionFeatureTest extends TestCase
         $commission->dispute();
         $this->actingAs($administrator)
             ->put(route('commissions.update', $commission->fresh()));
-
         $this->assertEquals('Archived', $commission->fresh()->status);
     }
 

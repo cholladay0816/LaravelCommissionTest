@@ -2,17 +2,27 @@
 
 namespace App\Models;
 
+use App\Mail\Commission\Accepted;
+use App\Mail\Commission\Archived;
+use App\Mail\Commission\Canceled;
+use App\Mail\Commission\Completed;
+use App\Mail\Commission\Declined;
+use App\Mail\Commission\Disputed;
+use App\Mail\Commission\Failed;
+use App\Mail\Commission\OverdueBuyer;
+use App\Mail\Commission\OverdueCreator;
+use App\Mail\Commission\Pending;
+use App\Mail\Commission\Refunded;
+use App\Mail\Commission\Resolved;
+use App\Mail\Commission\Sent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use JamesMills\LaravelTimezone\Facades\Timezone;
-use Stripe\Customer;
 use Stripe\StripeClient;
-use Stripe\Token;
 
 class Commission extends Model
 {
@@ -219,7 +229,8 @@ class Commission extends Model
     }
     public function decline()
     {
-        // TODO: send emails and notifications
+        // TODO: send notifications
+        Mail::to($this->buyer->email)->queue(new Declined($this));
         $this->status = 'Declined';
         $this->save();
         CommissionEvent::create(
@@ -241,7 +252,8 @@ class Commission extends Model
     }
     public function accept()
     {
-        // TODO: send emails and notifications
+        // TODO: send notifications
+        Mail::to($this->buyer->email)->queue(new Accepted($this));
         $this->status = 'Purchasing';
         $this->expires_at = now()->addDays($this->days_to_complete);
         $this->save();
@@ -267,7 +279,7 @@ class Commission extends Model
     {
         $amount = $this->price * 100;
         $total = $amount + 30;
-        $total += ceil(($this->price * 0.06) * 100);
+        $total += ceil(($this->price * config('commission.sales_tax')) * 100);
         return floatval($total - $amount) / 100;
     }
     public function getFeesAttribute()
@@ -278,7 +290,7 @@ class Commission extends Model
     {
         $amount = $this->price * 100;
         $total = $amount + 30;
-        $total += ceil(($this->price * 0.06) * 100);
+        $total += ceil(($this->price * config('commission.sales_tax')) * 100);
         return floatval($total) / 100;
     }
     public function getTotalAttribute()
@@ -325,6 +337,8 @@ class Commission extends Model
                 $this->invoice_id = $invoice->id;
                 $this->status = 'Pending';
                 $this->save();
+                Mail::to($this->buyer->email)->queue(new Sent($this));
+                Mail::to($this->creator->email)->queue(new Pending($this));
                 return $invoice;
             } catch (\Exception $e) {
                 return $e;
@@ -351,7 +365,7 @@ class Commission extends Model
 
     public function chargeSuccess()
     {
-        // TODO: send emails and notifications
+        // TODO: send notifications
         $this->status = 'Active';
         $this->save();
 
@@ -365,7 +379,9 @@ class Commission extends Model
 
     public function overdue()
     {
-        // TODO: send emails and notifications
+        // TODO: send notifications
+        Mail::to($this->buyer->email)->queue(new OverdueBuyer($this));
+        Mail::to($this->creator->email)->queue(new OverdueCreator($this));
         $this->status = 'Overdue';
         $this->save();
 
@@ -382,7 +398,8 @@ class Commission extends Model
         $this->status = 'Failed';
         $this->invoice_id = null;
         $this->save();
-        // TODO: send emails and notifications
+        // TODO: send notifications
+        Mail::to($this->buyer->email)->queue(new Failed($this));
 
         CommissionEvent::create(
             [
@@ -396,7 +413,9 @@ class Commission extends Model
     {
         $this->status = 'Completed';
         $this->save();
-        // TODO: send emails and notifications
+
+        Mail::to($this->buyer->email)->queue(new Completed($this));
+        // TODO: send notifications
         CommissionEvent::create(
             [
                 'commission_id' => $this->id,
@@ -408,7 +427,8 @@ class Commission extends Model
     {
         $this->status = 'Disputed';
         $this->save();
-        // TODO: send emails and notifications
+        // TODO: send notifications
+        Mail::to($this->creator->email)->queue(new Disputed($this));
         CommissionEvent::create(
             [
                 'commission_id' => $this->id,
@@ -441,7 +461,8 @@ class Commission extends Model
 
     public function expire()
     {
-        // TODO: send emails and notifications
+        // TODO: send notifications
+        Mail::to($this->creator->email)->queue(new Canceled($this));
         $this->status = 'Expired';
         $this->save();
         $stripe = new StripeClient(config('stripe.secret'));
@@ -462,7 +483,10 @@ class Commission extends Model
     }
     public function refund()
     {
-        // TODO: send emails and notifications
+        // TODO: send notifications
+        Mail::to($this->buyer->email)->queue(new Refunded($this));
+        Mail::to($this->creator->email)->queue(new Refunded($this));
+
         $this->status = 'Refunded';
         $this->save();
         $stripe = new StripeClient(config('stripe.secret'));
@@ -482,7 +506,9 @@ class Commission extends Model
     }
     public function resolve()
     {
-        // TODO: send emails and notifications
+        // TODO: send notifications
+        Mail::to($this->creator->email)->queue(new Resolved($this));
+        Mail::to($this->buyer->email)->queue(new Resolved($this));
         CommissionEvent::create(
             [
                 'commission_id' => $this->id,
@@ -493,9 +519,12 @@ class Commission extends Model
     }
     public function archive()
     {
+        // TODO: send notifications to creator
+        Mail::to($this->creator->email)->queue(new Archived($this));
+
         $this->status = 'Archived';
         $this->save();
-        // TODO: send emails and notifications to creator
+
         $stripe = new StripeClient(config('stripe.secret'));
         $invoice = $stripe->invoices->retrieve($this->invoice_id, ['expand' => ['charge']]);
 
